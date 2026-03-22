@@ -11,10 +11,16 @@ from dotenv import dotenv_values
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_PATH = BASE_DIR / ".env"
 
-env = dotenv_values(ENV_PATH)
+api_base_url_secret = st.secrets.get("API_BASE_URL", None)
+api_key_secret = st.secrets.get("API_KEY", None)
 
-API_BASE_URL = env.get("API_BASE_URL")
-API_KEY = env.get("API_KEY")
+if api_base_url_secret and api_key_secret:
+    API_BASE_URL = api_base_url_secret
+    API_KEY = api_key_secret
+else:
+    env = dotenv_values(ENV_PATH)
+    API_BASE_URL = env.get("API_BASE_URL")
+    API_KEY = env.get("API_KEY")
 
 MODEL_PATH = BASE_DIR / "Datasets" / "automation_rf_model.pkl"
 JOB_FEATURES_PATH = BASE_DIR / "Datasets" / "job_features.csv"
